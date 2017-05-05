@@ -1,5 +1,6 @@
 
 public class PTTStringsMap<V> implements StringsMap<V> {
+	
 	private Node<V> root;
 	private int size;
 	
@@ -8,66 +9,29 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		char[] keyChar = key.toCharArray();
 
-		if(root == null){
+		if(root == null) {
 
 			root = putAux(keyChar, value, 0);
 
 		} else {
+			
 			find(root, 0, keyChar, value);
 
 		}
 	}
 
-	private Node<V> putAux(char[] keyChar, V value, int i){
+	private Node<V> putAux(char[] keyChar, V value, int i) {
+		
 		if(i < keyChar.length-1){
+			
 			return new Node<>(keyChar[i], null, null, putAux(keyChar, value, i+1), null);
+			
 		} else {
+			
 			return new Node<>(keyChar[i], value, null, null, null);
+			
 		}
 	}
-
-	//	private Node<V> find(Node<V> noh, char[] keyChar, int i, V value){
-	//		if(Character.compare(keyChar[i], noh.caracter) == 0){
-	//			if(noh.mid == null){
-	//				noh.mid = putAux(keyChar, value, i+1);
-	//				return noh;
-	//			}else {
-	//				if(i < keyChar.length-1){
-	//					noh.mid =find(noh.mid, keyChar, i+1, value);
-	//					return noh;
-	//				} else {
-	//					noh.mid.value = value;
-	//					return noh;
-	//				}
-	//			}
-	//		} else if(Character.compare(keyChar[i], noh.caracter) < 0) {
-	//			if(noh.left == null){
-	//				noh.left = putAux(keyChar, value, i);
-	//				return noh;
-	//			} else {
-	//				if(i < keyChar.length-1){
-	//					noh.left = find(noh, keyChar, i, value);
-	//					return noh;
-	//				} else {
-	//					noh.left.value = value;
-	//					return noh;
-	//				}
-	//			}
-	//		} else {
-	//			if(noh.right == null){
-	//				noh.right = putAux(keyChar, value, i);
-	//				return noh;
-	//			} else {
-	//				if(i < keyChar.length-1){
-	//					noh.right = find(noh, keyChar, i, value);
-	//					return noh;
-	//				} else {
-	//					noh.left.value = value;
-	//					return noh.left;
-	//				}
-	//			}
-	//		}
-	//	}
 
 	private void find(Node<V> node, int index, char[] key, V value) {
 		
@@ -111,26 +75,30 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 			
 		}
 		
-		
-		
 	}
-	public boolean containsKey(String key){
+	
+	public boolean containsKey(String key) {
+		
 		return false;
+		
 	}
 
-	public V get(String key){
+	public V get(String key) {
+		
 		return null;
 	}
 
-	public int size(){
+	public int size() {
+		
 		return size;
 	}
 
-	public Iterable<String> keys(){
+	public Iterable<String> keys() {
+		
 		return null;
 	}
 
-	private static class Node<V>{
+	private static class Node<V> {
 
 		private char caracter;
 		private V value;
@@ -150,7 +118,9 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 	}
 
 	public static void main(String[] args) {
+		
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
+		
 		mapa.put("abc", 3);
 		mapa.put("abf", 5);
 		mapa.put("abc", 69);
