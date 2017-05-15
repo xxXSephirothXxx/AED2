@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+import java.util.Iterator;
 
 /*
  * TODO
@@ -90,7 +92,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 	public boolean containsKey(String key) {
 
 		if (key.equals("")) return false;
-		
+
 		char[] keyChar = key.toLowerCase().toCharArray();
 
 		return find(root, 0, keyChar) != null;
@@ -125,11 +127,11 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 			/*
 			 * Move to the node below it
 			 */
-			
+
 			return find(node.mid, index + 1, key);
 
 		} else if (Character.compare(node.caracter, key[index]) > 0) { //left node
-			
+
 			if (node.left == null) return null;
 
 			return find(node.left, index, key);
@@ -143,21 +145,21 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		}
 
 	}
-	
+
 	public V get(String key) {
 
 		char[] keyChar = key.toLowerCase().toCharArray();
-		
+
 		Node<V> result = find(root, 0, keyChar);
-		
+
 		if (result == null) {
-			
+
 			return null;
-			
+
 		} else {
-			
+
 			return result.value;
-			
+
 		}
 	}
 
@@ -168,7 +170,50 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 	public Iterable<String> keys() {
 
-		return null;
+		ArrayDeque<String> lista = new ArrayDeque<>();
+
+		keysAux(root, "", lista);
+
+		return lista;
+
+	}
+
+	private void keysAux(Node<V> node, String key, ArrayDeque<String> lista) {
+
+		if (node.left != null) {
+
+			keysAux(node.left, key, lista);
+
+		}
+
+		if (node.right != null) {
+
+			keysAux(node.right, key, lista);
+
+		}
+		
+		if (node.value == null && node.mid != null) {
+			
+			key += node.caracter;
+			
+			keysAux(node.mid, key, lista);
+			
+		} else if (node.value != null && node.mid != null) {
+			
+			key += node.caracter;
+			
+			lista.add(key);
+			
+			keysAux(node.mid, key, lista);
+			
+		} else if (node.value != null && node.mid == null) {
+			
+			key += node.caracter;
+			
+			lista.add(key);
+			
+		}
+
 	}
 
 	private static class Node<V> {
@@ -190,6 +235,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		}
 	}
 
+
 	public static void main(String[] args) {
 
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
@@ -200,7 +246,13 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		mapa.put("lul", 6);
 		mapa.put("aaa", 7);
 
-		System.out.println(mapa.get("abf").toString());
-
+		Iterable<String> iter = mapa.keys();
+	
+		
+		for (String string : iter) {
+			
+			System.out.println(string);
+			
+		}
 	}
 }
