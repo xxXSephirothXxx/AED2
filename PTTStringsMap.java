@@ -1,5 +1,4 @@
 import java.util.ArrayDeque;
-import java.util.Iterator;
 
 /*
  * TODO
@@ -22,7 +21,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 			root = putAux(key, value, 0);
 			size++;
-			
+
 		} else {
 
 			putAux(root, 0, key, value);
@@ -212,20 +211,72 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 	}
 
+
 //	public Iterable<String> keysStartingWith(String pref) {
-//		
+//
 //		ArrayDeque<String> lista = new ArrayDeque<>();
-//		
-//		keysAux(find(root, 0, pref), pref, lista);
-//		
+//
+//		Node<V> node = keysStartingWithAux(pref, 0, root);
+//
+//		if (node != null)
+//
+//			keysAux(node, pref, lista);
+//
 //		return lista;
+//
 //	}
-	
-	
+//
+//	private Node<V> keysStartingWithAux(String pref, int index, Node<V> node) {
+//
+//		if (Character.compare(node.caracter, pref.charAt(index)) == 0) {
+//
+//			/*If we checked all the characters and the value on node is not null
+//			 * (Meaning it's the end of key) then we return the node
+//			 */
+//
+//			if (index == pref.length() - 1) {
+//
+//				return node;
+//
+//			}
+//
+//			/*If we reached the end of the key without finding any match or
+//			 *if the node below it is null (means that there's no other caracters left to search)
+//			 */
+//
+//			if (node.mid == null) {
+//
+//				return null;
+//
+//			}
+//
+//			/*
+//			 * Move to the node below it
+//			 */
+//
+//			return keysStartingWithAux(pref, index + 1, node.mid);
+//
+//		} else if (Character.compare(node.caracter, pref.charAt(index)) > 0) { //left node
+//
+//			if (node.left == null) return null;
+//
+//			return keysStartingWithAux(pref, index, node.left);
+//
+//		} else { //right node
+//
+//			if (node.right == null) return null;
+//
+//			return keysStartingWithAux(pref, index, node.right);
+//
+//		}
+//
+//	}
+
 	@SuppressWarnings("unchecked")
 	public boolean equals (Object object) {
 
-		return this == object || (object instanceof PTTStringsMap && equalsAux((PTTStringsMap<V>)object));
+		return this == object || (object instanceof PTTStringsMap && (((PTTStringsMap<V>) object).size() == this.size)
+				&& equalsAux((PTTStringsMap<V>)object));
 
 	}
 
@@ -282,21 +333,21 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		mapa.put("lul", 6);
 		mapa.put("aaa", 7);
 
-		Iterable<String> iter = mapa.keys();
+//		Iterable<String> iter = mapa.keys();
+//
+//
+//		for (String string : iter) {
+//
+//			System.out.println(string);
+//
+//		}
 
+		Iterable<String> teste = mapa.keysStartingWith("a");
 
-		for (String string : iter) {
+		for (String string : teste) {
 
 			System.out.println(string);
 
 		}
-
-//		Iterable<String> teste = mapa.keysStartingWith("ab");
-//		
-//		for (String string : teste) {
-//			
-//			System.out.println(string);
-//			
-//		}
 	}
 }
