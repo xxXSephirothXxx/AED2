@@ -212,65 +212,65 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 	}
 
 
-//	public Iterable<String> keysStartingWith(String pref) {
-//
-//		ArrayDeque<String> lista = new ArrayDeque<>();
-//
-//		Node<V> node = keysStartingWithAux(pref, 0, root);
-//
-//		if (node != null)
-//
-//			keysAux(node, pref, lista);
-//
-//		return lista;
-//
-//	}
-//
-//	private Node<V> keysStartingWithAux(String pref, int index, Node<V> node) {
-//
-//		if (Character.compare(node.caracter, pref.charAt(index)) == 0) {
-//
-//			/*If we checked all the characters and the value on node is not null
-//			 * (Meaning it's the end of key) then we return the node
-//			 */
-//
-//			if (index == pref.length() - 1) {
-//
-//				return node;
-//
-//			}
-//
-//			/*If we reached the end of the key without finding any match or
-//			 *if the node below it is null (means that there's no other caracters left to search)
-//			 */
-//
-//			if (node.mid == null) {
-//
-//				return null;
-//
-//			}
-//
-//			/*
-//			 * Move to the node below it
-//			 */
-//
-//			return keysStartingWithAux(pref, index + 1, node.mid);
-//
-//		} else if (Character.compare(node.caracter, pref.charAt(index)) > 0) { //left node
-//
-//			if (node.left == null) return null;
-//
-//			return keysStartingWithAux(pref, index, node.left);
-//
-//		} else { //right node
-//
-//			if (node.right == null) return null;
-//
-//			return keysStartingWithAux(pref, index, node.right);
-//
-//		}
-//
-//	}
+	public Iterable<String> keysStartingWith(String pref) {
+
+		ArrayDeque<String> lista = new ArrayDeque<>();
+
+		Node<V> node = keysStartingWithAux(pref, 0, root);
+
+		if (node != null && node.mid != null)
+
+			keysAux(node.mid, pref, lista);
+
+		return lista;
+
+	}
+
+	private Node<V> keysStartingWithAux(String pref, int index, Node<V> node) {
+
+		if (Character.compare(node.caracter, pref.charAt(index)) == 0) {
+
+			/*If we checked all the characters and the value on node is not null
+			 * (Meaning it's the end of key) then we return the node
+			 */
+
+			if (index == pref.length() - 1) {
+
+				return node;
+
+			}
+
+			/*If we reached the end of the key without finding any match or
+			 *if the node below it is null (means that there's no other caracters left to search)
+			 */
+
+			if (node.mid == null) {
+
+				return null;
+
+			}
+
+			/*
+			 * Move to the node below it
+			 */
+
+			return keysStartingWithAux(pref, index + 1, node.mid);
+
+		} else if (Character.compare(node.caracter, pref.charAt(index)) > 0) { //left node
+
+			if (node.left == null) return null;
+
+			return keysStartingWithAux(pref, index, node.left);
+
+		} else { //right node
+
+			if (node.right == null) return null;
+
+			return keysStartingWithAux(pref, index, node.right);
+
+		}
+
+	}
 
 	@SuppressWarnings("unchecked")
 	public boolean equals (Object object) {
@@ -342,7 +342,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 //
 //		}
 
-		Iterable<String> teste = mapa.keysStartingWith("a");
+		Iterable<String> teste = mapa.keysStartingWith("b");
 
 		for (String string : teste) {
 
