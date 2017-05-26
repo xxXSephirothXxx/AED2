@@ -249,6 +249,32 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		return true;
 	}
+	
+	public PTTStringsMap<V> clone(){
+		PTTStringsMap<V> mapa = new PTTStringsMap<>();
+		String st = new String();
+		cloneAux(root, st, mapa);
+		return mapa;
+	}
+	
+	public void cloneAux(Node<V> noh, String key, PTTStringsMap<V> mapa){
+		if(noh.mid != null){
+			String st = key + noh.caracter;
+			cloneAux(noh.mid, st, mapa);
+		}
+		
+		if(noh.left != null){
+			cloneAux(noh.left, key, mapa);
+		}
+		
+		if(noh.right != null){
+			cloneAux(noh.right, key, mapa);
+		}
+		
+		if(noh.value != null){
+			mapa.put(key += noh.caracter, noh.value);
+		}
+	}
 
 
 	private static class Node<V> {
