@@ -2,17 +2,15 @@ import java.util.ArrayDeque;
 
 /*
  * TODO
- * 
- * - Implementar o size, o Iterable
- * - Implementar o resto dos métodos
  * - Javadoc
- * - Comentários maybe
+ * - Comments
  */
 
 public class PTTStringsMap<V> implements StringsMap<V> {
 
 	private Node<V> root;
 	private int size;
+
 
 
 	public void put(String key, V value){
@@ -47,7 +45,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		if (Character.compare(node.caracter, key.charAt(index)) == 0) {
 
-			if (node.mid == null && index == key.length() - 1) {
+			if (index == (key.length() - 1)) {
 
 				node.value = value;
 				return;
@@ -302,6 +300,39 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 	}
 
 
+	public String toString() {
+
+		StringBuilder result = new StringBuilder();
+		
+		toStringAux(root, 0, result);
+		
+		return result.toString();
+		
+	}
+
+	private void toStringAux(Node<V> node, int index, StringBuilder sb) {
+
+		sb.append("Char: " + node.caracter + "; Value: " + node.value + "; Depth: " + index + ";\n");
+
+		if (node.left != null) {
+
+			toStringAux(node.left, index + 1, sb);
+
+		}
+
+		if (node.mid != null) {
+
+			toStringAux(node.mid, index + 1, sb);
+
+		}
+
+		if (node.right != null) {
+
+			toStringAux(node.right, index + 1, sb);
+
+		}
+	}
+	
 	private static class Node<V> {
 
 		private char caracter;
@@ -321,33 +352,12 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		}
 	}
 
-
-
 	public static void main(String[] args) {
-
+		
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
-
-		mapa.put("Abc", 3);
-		mapa.put("abf", 5);
-		mapa.put("abc", 69);
-		mapa.put("lul", 6);
-		mapa.put("aaa", 7);
-
-//		Iterable<String> iter = mapa.keys();
-//
-//
-//		for (String string : iter) {
-//
-//			System.out.println(string);
-//
-//		}
-
-		Iterable<String> teste = mapa.keysStartingWith("b");
-
-		for (String string : teste) {
-
-			System.out.println(string);
-
-		}
+		mapa.put("Larry is gay for Swood", 69);
+		mapa.put("Kol is kool", 420);
+		
+		System.out.println(mapa.toString());
 	}
 }
