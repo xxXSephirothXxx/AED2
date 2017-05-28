@@ -45,7 +45,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		if (Character.compare(node.caracter, key.charAt(index)) == 0) {
 
-			if (index == (key.length() - 1)) {
+			if (index == key.length() - 1) {
 
 				node.value = value;
 				return;
@@ -90,7 +90,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 	public boolean containsKey(String key) {
 
-		return key.equals("") || find(root, 0, key) != null;
+		return !key.equals("") && find(root, 0, key) != null;
 
 	}
 
@@ -357,6 +357,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
 		mapa.put("Larry is gay for Swood", 69);
 		mapa.put("Kol is kool", 420);
+	
 		
 		System.out.println(mapa.toString());
 	}

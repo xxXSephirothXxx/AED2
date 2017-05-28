@@ -19,6 +19,7 @@ public class Autocomplete2 {
 		Map<String, Integer> mapa = new HashMap<>();
 
 		try {
+			
 			BufferedReader leitorFile = new BufferedReader(new FileReader(new File(args[0])));
 			String palavra = leitorFile.readLine();
 
