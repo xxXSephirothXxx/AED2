@@ -184,27 +184,17 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 			keysAux(node.right, key, lista);
 
 		}
-
-		if (node.value == null && node.mid != null) {
-
-			key += node.caracter;
-
-			keysAux(node.mid, key, lista);
-
-		} else if (node.value != null && node.mid != null) {
-
-			key += node.caracter;
-
+		
+		key += node.caracter;
+		
+		if(node.value != null) {
+			
 			lista.add(key);
-
+		}
+		
+		if(node.mid != null) {
+			
 			keysAux(node.mid, key, lista);
-
-		} else if (node.value != null && node.mid == null) {
-
-			key += node.caracter;
-
-			lista.add(key);
-
 		}
 
 	}
@@ -303,11 +293,11 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 	public String toString() {
 
 		StringBuilder result = new StringBuilder();
-		
+
 		toStringAux(root, 0, result);
-		
+
 		return result.toString();
-		
+
 	}
 
 	private void toStringAux(Node<V> node, int index, StringBuilder sb) {
@@ -332,7 +322,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		}
 	}
-	
+
 	private static class Node<V> {
 
 		private char caracter;
@@ -353,12 +343,12 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 	}
 
 	public static void main(String[] args) {
-		
+
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
 		mapa.put("Larry is gay for Swood", 69);
 		mapa.put("Kol is kool", 420);
-	
-		
+
+
 		System.out.println(mapa.toString());
 	}
 }

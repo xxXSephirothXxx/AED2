@@ -17,7 +17,7 @@ public class Autocomplete1 {
 
 			try {
 				
-				BufferedReader leitorFile = new BufferedReader(new FileReader(new File(args[0])));
+				BufferedReader leitorFile = new BufferedReader(new FileReader(args[0]));
 				String palavra = leitorFile.readLine();
 
 				while (palavra != null) {
