@@ -1,19 +1,17 @@
 import java.util.ArrayDeque;
+import java.util.StringJoiner;
 
-/*
- * TODO
+/**
+ * An implementation of {@link StringsMap} using a ternary search tree
+ * @author fc49449 - Rafael Prates && fc49457 - José Gonçalves
  * 
- * - Implementar o size, o Iterable
- * - Implementar o resto dos métodos
- * - Javadoc
- * - Comentários maybe
+ * @param <V> The type of the values in the map.
  */
 
-public class PTTStringsMap<V> implements StringsMap<V> {
+public class PTTStringsMap<V> implements StringsMap<V>, Cloneable {
 
 	private Node<V> root;
 	private int size;
-
 
 	public void put(String key, V value){
 
@@ -30,31 +28,66 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 	}
 
-	private Node<V> putAux(String keyChar, V value, int i) {
+	/**
+	 * Returns a series of nodes 
+	 * @param keyChar - The key
+	 * @param value - The value associated with 
+	 * @param index - The index of the String
+	 * @return - The starting node
+	 * @requires keyChar.length() > 0 && value != null 
+	 * 			&& 0 <= index < keyChar.length()
+	 */
 
-		if(i < keyChar.length() - 1){
+	private Node<V> putAux(String keyChar, V value, int index) {
 
-			return new Node<>(keyChar.charAt(i), null, null, putAux(keyChar, value, i+1), null);
+
+		if(index < keyChar.length() - 1){
+
+			// If we haven't reached the end of the key we need to keep making nodes
+			// below eachother until we reach the end
+
+			return new Node<>(keyChar.charAt(index), null, null, putAux(keyChar, value, index+1), null);
 
 		} else {
 
-			return new Node<>(keyChar.charAt(i), value, null, null, null);
+			// Once we reach the end of the key we associate the final character of the
+			// key to the Node
+
+			return new Node<>(keyChar.charAt(index), value, null, null, null);
 
 		}
 	}
+
+	/**
+	 * Traverses the tree with the key given to add the key and it's values
+	 * @param node - The current node
+	 * @param index - The index of the String
+	 * @param key - The key
+	 * @param value - The value associated with the given key
+	 * @requires node != null && 0 <= index < key.length() && key.length() > 0
+	 * 				&& value != null
+	 */
 
 	private void putAux(Node<V> node, int index, String key, V value) {
 
 		if (Character.compare(node.caracter, key.charAt(index)) == 0) {
 
-			if (node.mid == null && index == key.length() - 1) {
+			if (index == key.length() - 1) {
+
+				// If we reached the end of the key all we have to do
+				// Is change the value of the key
 
 				node.value = value;
 				return;
 
 			} else if (node.mid == null) {
 
-				node.mid = putAux(key, value, index);
+				/* If the Node below the current one is null and we haven't reached the
+				 * end of the key we add the rest of the key's characters and increase
+				 * the size
+				 */
+
+				node.mid = putAux(key, value, index + 1);
 				size++;
 				return;
 
@@ -63,6 +96,12 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 			putAux(node.mid, index + 1, key, value);
 
 		} else if (Character.compare(node.caracter, key.charAt(index)) > 0) {
+
+			/*
+			 * If the node on the left is null then we have to create a new node
+			 * with the remaining of the key and increase the size. Otherwise
+			 * we just need to switch to the node on the left and keep going
+			 */
 
 			if (node.left == null) {
 
@@ -75,6 +114,11 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 			putAux(node.left, index, key, value);
 
 		} else {
+
+			/*
+			 * Same reasoning as the above comment except we're looking at the node on
+			 * the right
+			 */
 
 			if (node.right == null) {
 
@@ -92,9 +136,27 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 	public boolean containsKey(String key) {
 
-		return key.equals("") || find(root, 0, key) != null;
+		if (root != null) {
+
+			return find(root, 0, key) != null;
+
+		} else {
+
+			return false;
+
+		}
 
 	}
+
+	/**
+	 * Returns the node  
+	 * @param node - The current Node
+	 * @param index - The index of the String
+	 * @param key - The key being searched for
+	 * @return The node with the final character of the key if it's in the map and it
+	 * 			contains a value otherwise returns false
+	 * @requires node != null && 0 <= index < key.length() && key.length() > 0
+	 */
 
 	private Node<V> find(Node<V> node, int index, String key) {
 
@@ -112,7 +174,7 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 			}
 
 			/*If we reached the end of the key without finding any match or
-			 *if the node below it is null (means that there's no other caracters left to search)
+			 *if the node below it is null (means that there's no other characters left to search)
 			 */
 
 			if (index == key.length() - 1 || node.mid == null) {
@@ -129,13 +191,21 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		} else if (Character.compare(node.caracter, key.charAt(index)) > 0) { //left node
 
-			if (node.left == null) return null;
+			if (node.left == null) {
+
+				return null;
+
+			}
 
 			return find(node.left, index, key);
 
 		} else { //right node
 
-			if (node.right == null) return null;
+			if (node.right == null) {
+
+				return null;
+
+			}
 
 			return find(node.right, index, key);
 
@@ -167,11 +237,25 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		ArrayDeque<String> lista = new ArrayDeque<>();
 
-		keysAux(root, "", lista);
+		if (root != null) {
+
+			keysAux(root, "", lista);
+
+		}
+
 
 		return lista;
 
 	}
+
+	/**
+	 * Recursively navigate through the tree and form keys and puts them on
+	 * an ArrayDeque
+	 * @param node - The current node
+	 * @param key - The key being formed
+	 * @param lista - An ArrayDeque where all the keys should be saved to
+	 * @requires node != null &&  key.length() > 0 && lista != null
+	 */
 
 	private void keysAux(Node<V> node, String key, ArrayDeque<String> lista) {
 
@@ -187,87 +271,91 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 
 		}
 
-		if (node.value == null && node.mid != null) {
+		key += node.caracter;
 
-			key += node.caracter;
-
-			keysAux(node.mid, key, lista);
-
-		} else if (node.value != null && node.mid != null) {
-
-			key += node.caracter;
+		if(node.value != null) {
 
 			lista.add(key);
+		}
+
+		if(node.mid != null) {
 
 			keysAux(node.mid, key, lista);
-
-		} else if (node.value != null && node.mid == null) {
-
-			key += node.caracter;
-
-			lista.add(key);
-
 		}
 
 	}
 
 
+	/**
+	 * Returns an Iterable containing all keys that start with pref
+	 * @param pref - The prefix
+	 * @return An Iterable containing all keys that start with pref
+	 * @requires pref.length() > 0
+	 */
+
 	public Iterable<String> keysStartingWith(String pref) {
 
 		ArrayDeque<String> lista = new ArrayDeque<>();
 
-		Node<V> node = keysStartingWithAux(pref, 0, root);
+		if (root != null) {
 
-		if (node != null && node.mid != null)
+			keysStartingWithAux(pref, 0, root, lista);
 
-			keysAux(node.mid, pref, lista);
+		}
 
 		return lista;
 
 	}
 
-	private Node<V> keysStartingWithAux(String pref, int index, Node<V> node) {
+	/**
+	 * Recursively navigate through the tree adding all keys starting with pref to
+	 * an ArrayDeque
+	 * @param pref - The prefix
+	 * @param index - The current index
+	 * @param node - The current node
+	 * @param lista - The ArrayDeque to add the keys
+	 * @requires 0 <= index < pref.length() && pref.length() > 0 &&
+	 * 			node != null && lista != null
+	 */
 
-		if (Character.compare(node.caracter, pref.charAt(index)) == 0) {
+	private void keysStartingWithAux(String pref, int index, Node<V> node, ArrayDeque<String> lista) {
 
-			/*If we checked all the characters and the value on node is not null
-			 * (Meaning it's the end of key) then we return the node
-			 */
+		if (Character.compare(node.caracter, pref.charAt(index)) == 0){
 
-			if (index == pref.length() - 1) {
+			if(pref.length() - 1 == index){
 
-				return node;
+				if(node.value != null){
+
+					lista.add(pref);
+
+				}
+
+				if(node.mid != null){
+
+					keysAux(node.mid, pref, lista);
+				}
+
+			} else if(node.mid != null){
+
+				keysStartingWithAux(pref, index + 1, node.mid, lista);
 
 			}
 
-			/*If we reached the end of the key without finding any match or
-			 *if the node below it is null (means that there's no other caracters left to search)
-			 */
+		} else if (Character.compare(node.caracter, pref.charAt(index)) > 0) {
 
-			if (node.mid == null) {
+			if (node.left != null) {
 
-				return null;
+				keysStartingWithAux(pref, index, node.left, lista);
 
 			}
 
-			/*
-			 * Move to the node below it
-			 */
+		} else {
 
-			return keysStartingWithAux(pref, index + 1, node.mid);
+			if (node.right != null) {
 
-		} else if (Character.compare(node.caracter, pref.charAt(index)) > 0) { //left node
+				keysStartingWithAux(pref, index, node.right, lista);
 
-			if (node.left == null) return null;
-
-			return keysStartingWithAux(pref, index, node.left);
-
-		} else { //right node
-
-			if (node.right == null) return null;
-
-			return keysStartingWithAux(pref, index, node.right);
-
+			}
 		}
 
 	}
@@ -279,6 +367,12 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 				&& equalsAux((PTTStringsMap<V>)object));
 
 	}
+
+	/**
+	 * Are these two PTTStringsMap equal?
+	 * @param object - The other PTTStringsMap
+	 * @return True if they contain the same keys with the same values. False otherwise.
+	 */
 
 	private boolean equalsAux (PTTStringsMap<V> object) {
 
@@ -327,6 +421,193 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		}
 	}
 
+	public PTTStringsMap<V> clone() {
+
+		try {
+
+			@SuppressWarnings("unchecked")
+			PTTStringsMap<V> result = (PTTStringsMap<V>) super.clone();
+
+			if (root != null) {
+
+				result.root = cloneAux(root);
+			}
+
+			return result;
+
+
+		} catch (CloneNotSupportedException e) {
+
+			System.out.println("Clone not supported.\n");
+
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * Returns a Node deep copied
+	 * @param node - The starting node
+	 * @return - A Node deep copied
+	 */
+
+	public Node<V> cloneAux(Node<V> node) {
+
+
+		if (node != null) {
+
+			/*
+			 * Create a new Node that copies the original node's character and value
+			 */
+
+			Node<V> newNode = new Node<>(node.caracter, node.value, null, null, null);
+
+			/*
+			 * And create the Nodes below it
+			 */
+
+			if (node.mid != null) {
+
+				newNode.mid = cloneAux(node.mid);
+
+			}
+
+			if (node.left != null) {
+
+				newNode.left = cloneAux(node.left);
+
+			}
+
+			if(node.right != null) {
+
+				newNode.right = cloneAux(node.right);
+
+			}
+
+			return newNode;
+		}
+
+		return null;
+	}
+
+
+	public String toString() {
+
+		StringBuilder result = new StringBuilder();
+
+		if (root != null) {
+
+			toStringAux(root, result);
+
+		}
+
+
+		return result.toString();
+
+	}
+
+	/**
+	 * Recursively navigate through the tree to give a textual representation of the tree
+	 * @param node - The current node
+	 * @param sb - The StringBuilder which will hold the key and the value in their textual
+	 * 				representation
+	 * @requires node != null && sb != null
+	 */
+	
+	private void toStringAux(Node<V> node, StringBuilder sb) {
+
+		if (node.left != null) {
+
+			toStringAux(node.left, sb);
+
+		}
+
+		if (node.right != null) {
+
+
+			toStringAux(node.right, sb);
+		}
+
+		sb.append(node.caracter);
+
+		if(node.value != null) {
+
+
+			sb.append("; Value: " + node.value.toString() + "\n");
+
+
+		}
+
+		if(node.mid != null) {
+
+			toStringAux(node.mid, sb);
+
+		}
+
+
+
+	}
+
+
+
+	/**
+	 * Returns a String that represents a tree in a format useful for debugging
+	 * @return A String that that represents the tree
+	 */
+
+	public String toStringForDebugging() {
+
+		StringBuilder result = new StringBuilder();
+
+		if (root != null) {
+
+			toStringForDebuggingAux(root, 0, result);
+
+		}
+
+		return result.toString();
+
+	}
+
+	/**
+	 * Recursively navigate the tree to create a String representation and
+	 * store it on a StringBuilder
+	 * @param node - The current node
+	 * @param index - The depth index
+	 * @param sb - The StringBuilder
+	 * @requires node != null && index >= 0 && sb != null
+	 */
+
+	private void toStringForDebuggingAux(Node<V> node, int index, StringBuilder sb) {
+
+		sb.append("Char: " + node.caracter + "; Value: " + node.value + "; Depth: " + index + ";\n");
+
+		if (node.left != null) {
+
+			toStringForDebuggingAux(node.left, index + 1, sb);
+
+		}
+
+		if (node.mid != null) {
+
+			toStringForDebuggingAux(node.mid, index + 1, sb);
+
+		}
+
+		if (node.right != null) {
+
+			toStringForDebuggingAux(node.right, index + 1, sb);
+
+		}
+	}
+
+	/**
+	 * 
+	 * @author fc49449 && fc49457
+	 *
+	 * @param <V> The type of the values.
+	 */
 
 	private static class Node<V> {
 
@@ -347,33 +628,16 @@ public class PTTStringsMap<V> implements StringsMap<V> {
 		}
 	}
 
-
-
 	public static void main(String[] args) {
 
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
 
-		mapa.put("Abc", 3);
-		mapa.put("abf", 5);
-		mapa.put("abc", 69);
-		mapa.put("lul", 6);
-		mapa.put("aaa", 7);
+		mapa.put("FUCK", 420);
+		mapa.put("TEST", 69);
+		mapa.put("2B SIT ON MY FACE", 1337);
+		mapa.put("ayyyyy lmao aliens", 1);
 
-//		Iterable<String> iter = mapa.keys();
-//
-//
-//		for (String string : iter) {
-//
-//			System.out.println(string);
-//
-//		}
+		System.out.println(mapa.toString());
 
-		Iterable<String> teste = mapa.keysStartingWith("b");
-
-		for (String string : teste) {
-
-			System.out.println(string);
-
-		}
 	}
 }

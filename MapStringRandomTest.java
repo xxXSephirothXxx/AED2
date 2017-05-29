@@ -110,7 +110,7 @@ public class MapStringRandomTest {
 					break;
 				} 				
 			}
-			System.out.println(map.toStringForDebugging());
+			//System.out.println(map.toStringForDebugging());
 			System.out.println(map);
 		}
 		System.out.println("Done!");  
