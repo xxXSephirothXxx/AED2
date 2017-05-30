@@ -40,7 +40,8 @@ public class Autocomplete2 {
 			while (leitor.hasNext()) {
 
 				prefix = leitor.nextLine();
-
+				
+				StopWatch contador = new StopWatch();
 				for (String string : set) {
 
 					if (string.startsWith(prefix)) {
@@ -48,9 +49,10 @@ public class Autocomplete2 {
 						System.out.println(string);
 
 					}
-
+					
 				}
-
+				
+				System.out.println("Tempo preciso: " + contador.elapsedTime());
 			}
 
 		} catch (FileNotFoundException e) {

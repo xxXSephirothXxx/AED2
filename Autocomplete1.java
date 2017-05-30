@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,11 +32,16 @@ public class Autocomplete1 {
 
 				while (leitor.hasNext()) {
 
-					for (String string : mapa.keysStartingWith(leitor.nextLine())) {
+					StopWatch contador = new StopWatch();
+					Iterable<String> iter = mapa.keysStartingWith(leitor.nextLine());
+					
+					for (String string : iter) {
 						
 						System.out.println(string);
 						
 					}
+					
+					System.out.println("Tempo preciso: " + contador.elapsedTime());
 					
 				}
 				

@@ -1,6 +1,4 @@
 import java.util.ArrayDeque;
-import java.util.StringJoiner;
-
 /**
  * An implementation of {@link StringsMap} using a ternary search tree
  * @author fc49449 - Rafael Prates && fc49457 - José Gonçalves
@@ -412,12 +410,11 @@ public class PTTStringsMap<V> implements StringsMap<V>, Cloneable {
 
 		} catch (CloneNotSupportedException e) {
 
-			System.out.println("Clone not supported.\n");
+			System.out.println("Clone not supported.");
 
 		}
 
 		return null;
-
 	}
 
 	/**
@@ -426,7 +423,7 @@ public class PTTStringsMap<V> implements StringsMap<V>, Cloneable {
 	 * @return - A Node deep copied
 	 */
 
-	public Node<V> cloneAux(Node<V> node) {
+	private Node<V> cloneAux(Node<V> node) {
 
 
 		if (node != null) {
@@ -477,7 +474,7 @@ public class PTTStringsMap<V> implements StringsMap<V>, Cloneable {
 		}
 
 
-		return result.toString();
+		return result.toString() + "Size: " + size + "\n";
 
 	}
 
@@ -488,7 +485,7 @@ public class PTTStringsMap<V> implements StringsMap<V>, Cloneable {
 	 * 				representation
 	 * @requires node != null && sb != null
 	 */
-	
+
 	private void toStringAux(Node<V> node, StringBuilder sb) {
 
 		if (node.left != null) {
@@ -602,16 +599,21 @@ public class PTTStringsMap<V> implements StringsMap<V>, Cloneable {
 		}
 	}
 
+	
 	public static void main(String[] args) {
-
+		
 		PTTStringsMap<Integer> mapa = new PTTStringsMap<>();
-
-		mapa.put("FUCK", 420);
-		mapa.put("TEST", 69);
-		mapa.put("2B SIT ON MY FACE", 1337);
-		mapa.put("ayyyyy lmao aliens", 1);
-
-		System.out.println(mapa.toString());
-
+		
+		mapa.put("2B", 69);
+		mapa.put("LOL", 1);
+		
+		PTTStringsMap<Integer> test = new PTTStringsMap<>();
+		
+		test.put("LOL", 1);
+		test.put("2B", 69);
+		
+		System.out.println(mapa.equals(test));
+				
+	
 	}
 }
